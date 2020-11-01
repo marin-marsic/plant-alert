@@ -8,6 +8,8 @@ import sys
 
 from btlewrap import BluepyBackend, GatttoolBackend, PygattBackend, available_backends
 
+from config import *
+
 from miflora import miflora_scanner
 from miflora.miflora_poller import (
     MI_BATTERY,
@@ -18,17 +20,32 @@ from miflora.miflora_poller import (
     MiFloraPoller,
 )
 
-def poll(args):
+def poll():
     """Poll data from the sensor."""
-    poller = MiFloraPoller("c4:7c:8d:66:4d:0d", GatttoolBackend)
+    poller = MiFloraPoller(mac, GatttoolBackend)
     print("Getting data from Mi Flora")
     print(f"FW: {poller.firmware_version()}")
     print(f"Name: {poller.name()}")
-    print("Temperature: {}".format(poller.parameter_value(MI_TEMPERATURE)))
-    print("Moisture: {}".format(poller.parameter_value(MI_MOISTURE)))
-    print("Light: {}".format(poller.parameter_value(MI_LIGHT)))
-    print("Conductivity: {}".format(poller.parameter_value(MI_CONDUCTIVITY)))
-    print("Battery: {}".format(poller.parameter_value(MI_BATTERY)))
+    
+    temperatureVal = poller.parameter_value(MI_TEMPERATURE)
+    temperatureOk = temperatureVal >= temperature[0] and temperatureVal <= temperature[1]
+    print("Temperature: {} -> {}".format(temperatureVal, temperatureOk))
+    
+    moistureVal = poller.parameter_value(MI_MOISTURE)
+    moistureOk = moistureVal >= moisture[0] and moistureVal <= moisture[1]
+    print("Moisture: {} -> {}".format(moistureVal, moistureOk))
+    
+    lightVal = poller.parameter_value(MI_LIGHT)
+    lightOk = moistureVal >= light[0] and lightVal <= light[1]
+    print("Light: {} -> {}".format(lightVal, lightOk))
+    
+    fertilityVal = poller.parameter_value(MI_CONDUCTIVITY)
+    fertilityOk = fertilityVal >= fertility[0] and fertilityVal <= fertility[1]
+    print("Conductivity: {} -> {}".format(fertilityVal, fertilityOk))
+    
+    batteryVal = poller.parameter_value(MI_BATTERY)
+    batteryOk = batteryVal > battery
+    print("Battery: {} -> {}".format(batteryVal, batteryOk))
+    
 
-
-poll(["c4:7c:8d:66:4d:0d"])
+poll()
