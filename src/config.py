@@ -16,3 +16,6 @@ light = [4000, 76000]
 
 # battery level alert (%)
 battery = 5
+
+# IFTTT webhook key
+webhookKey = 'iV0vrIav7ejZyhJzcANcDTrM_gfQbGYQJrgNPhjoafW'

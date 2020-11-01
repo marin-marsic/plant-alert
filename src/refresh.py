@@ -53,9 +53,8 @@ def poll():
     print(buffer)
 
    
-    # Making a GET request 
-    #r = requests.get('https://maker.ifttt.com/trigger/plant-alert/with/key/iV0vrIav7ejZyhJzcANcDTrM_gfQbGYQJrgNPhjoafW')
-    r = requests.post('https://maker.ifttt.com/trigger/plant-alert/with/key/iV0vrIav7ejZyhJzcANcDTrM_gfQbGYQJrgNPhjoafW', data ={'value1':buffer}) 
+    # Making a POST request 
+    r = requests.post('https://maker.ifttt.com/trigger/plant-alert/with/key/' + webhookKey, data ={'value1':buffer}) 
     
 
 poll()
