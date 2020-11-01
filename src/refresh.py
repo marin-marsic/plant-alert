@@ -54,7 +54,7 @@ def poll():
 
    
     # Making a POST request 
-    r = requests.post('https://maker.ifttt.com/trigger/plant-alert/with/key/' + webhookKey, data ={'value1':buffer}) 
+    r = requests.post(webhookUrl, data ={'value1':buffer}) 
     
 
 poll()

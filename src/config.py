@@ -17,5 +17,8 @@ light = [4000, 76000]
 # battery level alert (%)
 battery = 5
 
-# IFTTT webhook key
-webhookKey = 'iV0vrIav7ejZyhJzcANcDTrM_gfQbGYQJrgNPhjoafW'
+# IFTTT webhook url
+webhookUrl = 'https://maker.ifttt.com/trigger/plant-alert/with/key/iV0vrIav7ejZyhJzcANcDTrM_gfQbGYQJrgNPhjoafW'
+
+# cron scheduling https://pypi.org/project/python-crontab/
+cronTiming = '1 8,13,20 * * *'
