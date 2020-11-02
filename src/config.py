@@ -5,7 +5,7 @@ macAddresses = ["c4:7c:8d:66:4d:0d"]
 # min and max moisture (%)
 moisture = [15, 60]
 
-# min and max temperature (C)
+# min and max temperature (°C)
 temperature = [8, 35]
 
 # min and max fertility (uS/cm)
