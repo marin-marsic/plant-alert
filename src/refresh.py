@@ -21,14 +21,14 @@ from miflora.miflora_poller import (
     MiFloraPoller,
 )
 
-def poll():
+def poll(mac):
     """Poll data from the sensor."""
     poller = MiFloraPoller(mac, GatttoolBackend)
     print("Getting data from Mi Flora")
     print(f"FW: {poller.firmware_version()}")
     print(f"Name: {poller.name()}")
     
-    buffer = ""
+    buffer = poller.name() + "\n"
     
     temperatureVal = poller.parameter_value(MI_TEMPERATURE)
     temperatureOk = temperatureVal >= temperature[0] and temperatureVal <= temperature[1]
@@ -51,10 +51,10 @@ def poll():
     buffer += "Battery: {} -> {}\n".format(batteryVal, batteryOk)
     
     print(buffer)
-
    
     # Making a POST request 
     r = requests.post(webhookUrl, data ={'value1':buffer}) 
     
 
-poll()
+for mac in macAddresses:
+    poll(mac)
