@@ -21,4 +21,4 @@ battery = 5
 webhookUrl = 'https://maker.ifttt.com/trigger/plant-alert/with/key/iV0vrIav7ejZyhJzcANcDTrM_gfQbGYQJrgNPhjoafW'
 
 # cron scheduling https://pypi.org/project/python-crontab/
-cronTiming = '1 8,13,20 * * *'
+cronTiming = '1 4,9,13,18 * * *'
