@@ -1,6 +1,6 @@
 #### Notification alert system for Xiaomi Mi plant sensor (Mi Flora)
 
-Get notified of your plant's needs.
+Get notified of your plant's needs with a python script that periodically checks data from Mi Flora sensors and sends notifications using IFTTT platform.
 
 Requirements: 
 - [miflora API](https://github.com/basnijholt/miflora)
