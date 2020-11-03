@@ -21,4 +21,5 @@ battery = 5
 webhookUrl = 'https://maker.ifttt.com/trigger/plant-alert/with/key/iV0vrIav7ejZyhJzcANcDTrM_gfQbGYQJrgNPhjoafW'
 
 # cron scheduling https://pypi.org/project/python-crontab/
+# the coldest, the warmest time of day, morning, noon and evening sunlight
 cronTiming = '1 4,9,13,18 * * *'
