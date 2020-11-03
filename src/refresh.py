@@ -10,6 +10,7 @@ import requests
 from btlewrap import BluepyBackend, GatttoolBackend, PygattBackend, available_backends
 
 from config import *
+from db import *
 
 from miflora import miflora_scanner
 from miflora.miflora_poller import (
@@ -29,6 +30,18 @@ def getEmoticon(positive):
         return emojiOk
     return emojiAlert
 
+def checkValue(key, valRange, requireAll):
+    dbValues = getList(key, mac)
+    valOk = True if requireAll else False
+    for dbVal in dbValues:
+        if (requireAll):
+            if (dbVal < valRange[0] or dbVal > valRange[1]):
+                valOk = False
+            elif (dbVal >= valRange[0] and dbVal <= valRange[1]):
+                valOk = True
+                
+    return valOk
+
 def poll(mac):
     """Poll data from the sensor."""
     poller = MiFloraPoller(mac, GatttoolBackend)
@@ -39,19 +52,23 @@ def poll(mac):
     buffer = poller.name() + "\n"
     
     temperatureVal = poller.parameter_value(MI_TEMPERATURE)
-    temperatureOk = temperatureVal >= temperature[0] and temperatureVal <= temperature[1]
+    insertTemperature(temperatureVal, mac)
+    temperatureOk = checkValue('temperature', temperature, True)
     buffer += getEmoticon(temperatureOk) + " Temperature: {}°C\n".format(temperatureVal, temperatureOk)
     
     moistureVal = poller.parameter_value(MI_MOISTURE)
-    moistureOk = moistureVal >= moisture[0] and moistureVal <= moisture[1]
+    insertMoisture(moistureVal, mac)
+    moistureOk = checkValue('moisture', moisture, True)
     buffer += getEmoticon(temperatureOk) + " Moisture: {}%\n".format(moistureVal, moistureOk)
     
     lightVal = poller.parameter_value(MI_LIGHT)
-    lightOk = lightVal >= light[0] and lightVal <= light[1]
+    insertLight(lightVal, mac)
+    lightOk = checkValue('light', light, False)
     buffer += getEmoticon(lightOk) + " Light: {}lux\n".format(lightVal, lightOk)
     
     fertilityVal = poller.parameter_value(MI_CONDUCTIVITY)
-    fertilityOk = fertilityVal >= fertility[0] and fertilityVal <= fertility[1]
+    insertFertility(fertilityVal, mac)
+    fertilityOk = checkValue('fertility', fertility, True)
     buffer += getEmoticon(fertilityOk) + " Fertility: {}uS/cm\n".format(fertilityVal, fertilityOk)
     
     batteryVal = poller.parameter_value(MI_BATTERY)
@@ -63,8 +80,9 @@ def poll(mac):
     ""
    
     # Making a POST request 
-    r = requests.post(webhookUrl, data ={'value1':buffer}) 
-    
+    r = requests.post(webhookUrl, data = {'value1':buffer}) 
 
 for mac in macAddresses:
     poll(mac)
+    
+db.dump()

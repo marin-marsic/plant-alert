@@ -1,3 +1,4 @@
 *.pyc
 src/.DS_Store
+src/plant_alert.db
 .DS_Store 
