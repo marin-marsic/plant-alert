@@ -42,7 +42,7 @@ def insertLight(light, mac):
     db.set('light_' + mac, dbList)
     
 def getBattery(mac):
-    return db.get('battery', mac)
+    return db.get('battery_' + mac)
     
 def insertBattery(battery, mac):
     db.set('battery_' + mac, battery)
