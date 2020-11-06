@@ -7,6 +7,7 @@ import re
 import sys
 import requests
 from datetime import datetime
+from util import *
 
 from btlewrap import BluepyBackend, GatttoolBackend, PygattBackend, available_backends
 
@@ -23,26 +24,6 @@ from miflora.miflora_poller import (
     MiFloraPoller,
 )
 
-emojiAlert = '\U000026A0'
-emojiOk = '\U0001F49A'
-
-def getEmoticon(positive):
-    if positive:
-        return emojiOk
-    return emojiAlert
-
-def checkValue(key, valRange, requireAll):
-    dbValues = getList(key, mac)
-    valOk = True if requireAll else False
-    for dbVal in dbValues:
-        if (requireAll):
-            if (dbVal < valRange[0] or dbVal > valRange[1]):
-                valOk = False
-            elif (dbVal >= valRange[0] and dbVal <= valRange[1]):
-                valOk = True
-                
-    return valOk
-
 def poll(mac):
     """Poll data from the sensor."""
     poller = MiFloraPoller(mac, GatttoolBackend)
@@ -54,22 +35,22 @@ def poll(mac):
     
     temperatureVal = poller.parameter_value(MI_TEMPERATURE)
     insertTemperature(temperatureVal, mac)
-    temperatureOk = checkValue('temperature', temperature, True)
+    temperatureOk = checkValue(getList('temperature', mac), temperature, True)
     buffer += getEmoticon(temperatureOk) + " Temperature: {}°C\n".format(temperatureVal, temperatureOk)
     
     moistureVal = poller.parameter_value(MI_MOISTURE)
     insertMoisture(moistureVal, mac)
-    moistureOk = checkValue('moisture', moisture, True)
-    buffer += getEmoticon(temperatureOk) + " Moisture: {}%\n".format(moistureVal, moistureOk)
+    moistureOk = checkValue(getList('moisture', mac), moisture, True)
+    buffer += getEmoticon(moistureOk) + " Moisture: {}%\n".format(moistureVal, moistureOk)
     
     lightVal = poller.parameter_value(MI_LIGHT)
     insertLight(lightVal, mac)
-    lightOk = checkValue('light', light, False)
+    lightOk = checkValue(getList('light', mac), light, False)
     buffer += getEmoticon(lightOk) + " Light: {}lux\n".format(lightVal, lightOk)
     
     fertilityVal = poller.parameter_value(MI_CONDUCTIVITY)
     insertFertility(fertilityVal, mac)
-    fertilityOk = checkValue('fertility', fertility, True)
+    fertilityOk = checkValue(getList('fertility', mac), fertility, True)
     buffer += getEmoticon(fertilityOk) + " Fertility: {}uS/cm\n".format(fertilityVal, fertilityOk)
     
     batteryVal = poller.parameter_value(MI_BATTERY)
@@ -88,6 +69,7 @@ def poll(mac):
 
 
 for mac in macAddresses:
+    reset(mac)
     lastUpdate = getLastUpdate(mac)
     if (lastUpdate + 3600 < datetime.now().timestamp()):
         poll(mac)
