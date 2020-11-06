@@ -7,9 +7,10 @@ def reset(mac):
     db.set('moisture_' + mac, [])
     db.set('fertility_' + mac, [])
     db.set('light_' + mac, [])
+    db.set('updatedAt_' + mac, 0)
 
 def getList(key, mac):
-    dbList = dbList = db.get(key + '_' + mac)
+    dbList = db.get(key + '_' + mac)
     return dbList if (dbList != False) else []
 
 def getTemperatures(mac):
@@ -45,3 +46,10 @@ def getBattery(mac):
     
 def insertBattery(battery, mac):
     db.set('battery_' + mac, battery)
+    
+def getLastUpdate(mac):
+    lastUpdate = db.get('updatedAt_' + mac)
+    return lastUpdate if (lastUpdate != False) else 0
+    
+def insertLastUpdate(updatedAt, mac):
+    db.set('updatedAt_' + mac, updatedAt)

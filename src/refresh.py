@@ -5,7 +5,8 @@ import argparse
 import logging
 import re
 import sys
-import requests 
+import requests
+from datetime import datetime
 
 from btlewrap import BluepyBackend, GatttoolBackend, PygattBackend, available_backends
 
@@ -75,14 +76,20 @@ def poll(mac):
     batteryOk = batteryVal > battery
     buffer += getEmoticon(batteryOk) + " Battery: {}%\n".format(batteryVal, batteryOk)
     
+    buffer += "Updated at: " + datetime.now().strftime("%d/%m/%Y %H:%M")
+    
     print(buffer)
     
     ""
    
     # Making a POST request 
-    r = requests.post(webhookUrl, data = {'value1':buffer}) 
+    r = requests.post(webhookUrl, data = {'value1':buffer})
+
 
 for mac in macAddresses:
-    poll(mac)
+    lastUpdate = getLastUpdate(mac)
+    if (lastUpdate + 3600 < datetime.now().timestamp()):
+        poll(mac)
+        insertLastUpdate(datetime.now().timestamp(), mac)
     
 db.dump()
