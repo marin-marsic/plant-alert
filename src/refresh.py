@@ -73,6 +73,7 @@ def poll(mac):
     buffer += getEmoticon(fertilityOk) + " Fertility: {}uS/cm\n".format(fertilityVal, fertilityOk)
     
     batteryVal = poller.parameter_value(MI_BATTERY)
+    insertBattery(batteryVal, mac)
     batteryOk = batteryVal > battery
     buffer += getEmoticon(batteryOk) + " Battery: {}%\n".format(batteryVal, batteryOk)
     
